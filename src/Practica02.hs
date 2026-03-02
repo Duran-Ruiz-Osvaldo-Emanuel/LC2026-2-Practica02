@@ -56,23 +56,57 @@ estadosPosibles :: Prop -> [Estado]
 estadosPosibles f1 = conjPotencia (variables f1)
 
 --Ejercicio 4
+-- Dada una fórmula proposicional, esta devuelve la lista de todos sus modelos con estados donde la foórmula da verdadero.
 modelos :: Prop -> [Estado]
---Funcion lambda que genera todas las combinaciones posibles y para cada estado evalua la interpretacion de la Prop
-modelos p = myFilter(\estado -> interpretacion p estado)
-            (estadosPosibles p)
+modelos p =
+    -- Se generan todos los estados posibles de la fórmula
+    myFilter (\estado -> interpretacion p estado) --se filtran solo aquellos donde la interpretación da True
+             (estadosPosibles p)
 
 --Ejercicio 5
+-- Dadas dos fórmulas proposicionales f1 y f2 devuelve True si son lógicamente equivalentes
 sonEquivalentes :: Prop -> Prop -> Bool
-sonEquivalentes = undefined
+sonEquivalentes f1 f2 =
+    let 
+        -- Se obtienen todas las variables que aparecen en ambas fórmulas y se eliminan repetidas
+        vs = myNub (variables f1 ++ variables f2)
+        -- Se generan todos las interpretaciones posibles
+        estados = conjPotencia vs
+        diferentes = myFilter -- Se filtran los que tienen valores distintos
+            (\estado ->
+                interpretacion f1 estado /= interpretacion f2 estado
+            ) estados
+    -- Si no existen estados que difieran entonces son equivalentes
+    in diferentes == []
 
 --Ejercicio 6 
+--Recibe una fórmula proposicional y devuelve True si es verdadera en todos los estados
 tautologia :: Prop -> Bool
-tautologia = undefined
+tautologia f = 
+    let 
+        estados = estadosPosibles f  -- Se generan todos los estados posibles de la fórmula
+        falsos = myFilter  -- Se filtran los estados donde la fórmula es falsa
+            (\estado ->
+                interpretacion f estado == False
+            ) estados
+    -- Si no hay estados donde sea falsa entonces es tautología
+    in falsos == []
 
---Ejercicio 7
+    
+--Ejercicio 7 
+--Recibe una fórmula proposicional y devuelve True si es falsa en todos los estados
 contradiccion :: Prop -> Bool
-contradiccion = undefined
+contradiccion f = 
+    let
+        estados = estadosPosibles f -- Se generan todos los estados posibles de la fórmula
+        verdaderos = myFilter -- Se filtran los estados donde la fórmula es verdadera
+            (\estado ->
+                interpretacion f estado == True
+            ) estados
+    -- Si no existen verdaderas, entonces es una contradicción
+    in verdaderos == []
 
+    
 --Ejercicio 8
 consecuenciaLogica :: [Prop] -> Prop -> Bool
 consecuenciaLogica = undefined
