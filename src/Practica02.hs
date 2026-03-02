@@ -31,19 +31,35 @@ type Estado = [String]
 
 --Ejercicio 1
 variables :: Prop -> [String]
-variables = undefined
+variables (Var p) = [p]
+variables (Cons _) = []
+variables (Not f1) = myNub(variables f1)
+variables (And f1 f2) = myNub(variables f1 ++ variables f2)
+variables (Or f1 f2) = myNub(variables f1 ++ variables f2)
+variables (Impl f1 f2) = myNub(variables f1 ++ variables f2)
+variables (Syss f1 f2) = myNub(variables f1 ++ variables f2)
+
 
 --Ejercicio 2
 interpretacion :: Prop -> Estado -> Bool
-interpretacion = undefined
+interpretacion (Var p) estado = p `elem` estado
+interpretacion (Cons a) _ = a
+interpretacion (Not f1) estado = not (interpretacion f1 estado)
+interpretacion (And f1 f2) estado = interpretacion f1 estado && interpretacion f2 estado
+interpretacion (Or f1 f2) estado = interpretacion f1 estado || interpretacion f2 estado
+interpretacion (Impl f1 f2) estado = not (interpretacion f1 estado) || interpretacion f2 estado
+interpretacion (Syss f1 f2) estado = not (interpretacion f1 estado) || interpretacion f2 estado && not (interpretacion f2 estado) || interpretacion f1 estado
+
 
 --Ejercicio 3
 estadosPosibles :: Prop -> [Estado]
-estadosPosibles = undefined
+estadosPosibles f1 = conjPotencia (variables f1)
 
 --Ejercicio 4
 modelos :: Prop -> [Estado]
-modelos = undefined
+--Funcion lambda que genera todas las combinaciones posibles y para cada estado evalua la interpretacion de la Prop
+modelos p = myFilter(\estado -> interpretacion p estado)
+            (estadosPosibles p)
 
 --Ejercicio 5
 sonEquivalentes :: Prop -> Prop -> Bool
@@ -66,3 +82,16 @@ consecuenciaLogica = undefined
 conjPotencia :: [a] -> [[a]]
 conjPotencia [] = [[]]
 conjPotencia (x:xs) = [(x:ys) | ys <- conjPotencia xs] ++ conjPotencia xs
+
+--Funcion auxiliar para evitar contar repetidos
+myNub :: Eq a => [a] -> [a]
+myNub []     = []
+myNub (x:xs) = x : myNub (myFilter (/= x) xs)
+
+--Funcion auxiliar para filtrar los elementos repetidos
+myFilter :: (a -> Bool) -> [a] -> [a]
+myFilter _ [] = []
+myFilter p (x:xs)
+
+    | p x       = x : myFilter p xs
+    | otherwise = myFilter p xs
