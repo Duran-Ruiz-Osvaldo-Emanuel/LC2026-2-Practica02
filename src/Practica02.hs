@@ -76,7 +76,7 @@ sonEquivalentes f1 f2 =
             (\estado ->
                 interpretacion f1 estado /= interpretacion f2 estado
             ) estados
-    -- Si no existen estados que difieran entonces son equivalentes
+    -- Caso final cuando +no existen estados que difieran entonces son equivalentes
     in diferentes == []
 
 --Ejercicio 6 
@@ -89,7 +89,7 @@ tautologia f =
             (\estado ->
                 interpretacion f estado == False
             ) estados
-    -- Si no hay estados donde sea falsa entonces es tautología
+    -- Caso final no hay estados donde sea falsa entonces es tautología
     in falsos == []
 
     
@@ -110,7 +110,9 @@ contradiccion f =
 --Ejercicio 8
 consecuenciaLogica :: [Prop] -> Prop -> Bool
 consecuenciaLogica = undefined
-
+-- suponiendo tener una consecuencia logica syss es una tautologìa 
+--ocupar tautologìa
+--convertir una conjuncion en varias formulas
 
 --Funcion auxiliar
 conjPotencia :: [a] -> [[a]]
