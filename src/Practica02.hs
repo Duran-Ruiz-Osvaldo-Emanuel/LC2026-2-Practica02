@@ -108,11 +108,24 @@ contradiccion f =
 
     
 --Ejercicio 8
+-- Funcion auxiliar que convierte una lista de formulas en una sola formula usando conjunciones
+conjuncion :: [Prop] -> Prop
+-- Si la lista de premisas está vacía la conjunción se considera verdadera
+conjuncion [] = Cons True
+-- Si la lista tiene una sola fórmula
+conjuncion [p] = p
+-- Si hay varias fórmulas, se toma la primera y se une con la conjunción del resto usando And
+conjuncion (p:ps) = And p (conjuncion ps)
+
+--Ejercicio 8
+-- consecuenciaLogica recibe una lista de premisas y una conclusión y determina si la conclusión es consecuencia lógica de las premisas
+
 consecuenciaLogica :: [Prop] -> Prop -> Bool
-consecuenciaLogica = undefined
--- suponiendo tener una consecuencia logica syss es una tautologìa 
---ocupar tautologìa
---convertir una conjuncion en varias formulas
+consecuenciaLogica premisas conclusion =
+    -- Se construye una fórmula que representa:conjunción de todas las premisas ent conclusión
+    -- sabemos que la conclusión es consecuencia lógica de las premisas
+    -- si esta implicación es una tautología
+    tautologia (Impl (conjuncion premisas) conclusion)
 
 --Funcion auxiliar
 conjPotencia :: [a] -> [[a]]
