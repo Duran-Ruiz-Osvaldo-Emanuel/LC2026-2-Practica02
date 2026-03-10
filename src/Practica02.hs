@@ -1,3 +1,7 @@
+--revisar interpretacion, estsados posibles, modelos, ahi fallan 2
+
+
+
 module Practica02 where
 
 --Sintaxis de la logica proposicional
@@ -33,11 +37,11 @@ type Estado = [String]
 variables :: Prop -> [String]
 variables (Var p) = [p]
 variables (Cons _) = []
-variables (Not f1) = myNub(variables f1)
-variables (And f1 f2) = myNub(variables f1 ++ variables f2)
-variables (Or f1 f2) = myNub(variables f1 ++ variables f2)
-variables (Impl f1 f2) = myNub(variables f1 ++ variables f2)
-variables (Syss f1 f2) = myNub(variables f1 ++ variables f2)
+variables (Not f1) = variables f1
+variables (And f1 f2) = myNub (variables f2 ++ variables f1)
+variables (Or f1 f2) = myNub (variables f2 ++ variables f1)
+variables (Impl f1 f2) = myNub (variables f2 ++ variables f1)
+variables (Syss f1 f2) = myNub (variables f2 ++ variables f1)
 
 
 --Ejercicio 2
@@ -48,7 +52,7 @@ interpretacion (Not f1) estado = not (interpretacion f1 estado)
 interpretacion (And f1 f2) estado = interpretacion f1 estado && interpretacion f2 estado
 interpretacion (Or f1 f2) estado = interpretacion f1 estado || interpretacion f2 estado
 interpretacion (Impl f1 f2) estado = not (interpretacion f1 estado) || interpretacion f2 estado
-interpretacion (Syss f1 f2) estado = not (interpretacion f1 estado) || interpretacion f2 estado && not (interpretacion f2 estado) || interpretacion f1 estado
+interpretacion (Syss f1 f2) estado = (not (interpretacion f1 estado) || interpretacion f2 estado) && (not (interpretacion f2 estado) || interpretacion f1 estado)
 
 
 --Ejercicio 3
@@ -67,7 +71,7 @@ modelos p =
 -- Dadas dos fórmulas proposicionales f1 y f2 devuelve True si son lógicamente equivalentes
 sonEquivalentes :: Prop -> Prop -> Bool
 sonEquivalentes f1 f2 =
-    let 
+    let
         -- Se obtienen todas las variables que aparecen en ambas fórmulas y se eliminan repetidas
         vs = myNub (variables f1 ++ variables f2)
         -- Se generan todos las interpretaciones posibles
@@ -79,11 +83,11 @@ sonEquivalentes f1 f2 =
     -- Caso final cuando +no existen estados que difieran entonces son equivalentes
     in diferentes == []
 
---Ejercicio 6 
+--Ejercicio 6
 --Recibe una fórmula proposicional y devuelve True si es verdadera en todos los estados
 tautologia :: Prop -> Bool
-tautologia f = 
-    let 
+tautologia f =
+    let
         estados = estadosPosibles f  -- Se generan todos los estados posibles de la fórmula
         falsos = myFilter  -- Se filtran los estados donde la fórmula es falsa
             (\estado ->
@@ -92,11 +96,11 @@ tautologia f =
     -- Caso final no hay estados donde sea falsa entonces es tautología
     in falsos == []
 
-    
---Ejercicio 7 
+
+--Ejercicio 7
 --Recibe una fórmula proposicional y devuelve True si es falsa en todos los estados
 contradiccion :: Prop -> Bool
-contradiccion f = 
+contradiccion f =
     let
         estados = estadosPosibles f -- Se generan todos los estados posibles de la fórmula
         verdaderos = myFilter -- Se filtran los estados donde la fórmula es verdadera
@@ -106,7 +110,7 @@ contradiccion f =
     -- Si no existen verdaderas, entonces es una contradicción
     in verdaderos == []
 
-    
+
 --Ejercicio 8
 -- Funcion auxiliar que convierte una lista de formulas en una sola formula usando conjunciones
 conjuncion :: [Prop] -> Prop
