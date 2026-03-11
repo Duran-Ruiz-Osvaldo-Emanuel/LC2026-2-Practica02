@@ -52,7 +52,7 @@ interpretacion (Not f1) estado = not (interpretacion f1 estado)
 interpretacion (And f1 f2) estado = interpretacion f1 estado && interpretacion f2 estado
 interpretacion (Or f1 f2) estado = interpretacion f1 estado || interpretacion f2 estado
 interpretacion (Impl f1 f2) estado = not (interpretacion f1 estado) || interpretacion f2 estado
-interpretacion (Syss f1 f2) estado = (not (interpretacion f1 estado) || interpretacion f2 estado) && (not (interpretacion f2 estado) || interpretacion f1 estado)
+interpretacion (Syss f1 f2) estado =  interpretacion f1 estado == interpretacion f2 estado
 
 
 --Ejercicio 3
@@ -60,11 +60,10 @@ estadosPosibles :: Prop -> [Estado]
 estadosPosibles f1 = conjPotencia (variables f1)
 
 --Ejercicio 4
--- Dada una fórmula proposicional, esta devuelve la lista de todos sus modelos con estados donde la foórmula da verdadero.
 modelos :: Prop -> [Estado]
 modelos p =
-    -- Se generan todos los estados posibles de la fórmula
-    myFilter (\estado -> interpretacion p estado) --se filtran solo aquellos donde la interpretación da True
+    -- Hacer todos los estados posibles de la fórmula
+    myFilter (\estado -> interpretacion p estado) --se toman donde la interpretación da True
              (estadosPosibles p)
 
 --Ejercicio 5

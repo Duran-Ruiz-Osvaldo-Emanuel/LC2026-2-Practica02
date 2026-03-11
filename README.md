@@ -30,4 +30,4 @@ En esta sección deben eliminar esta línea de texto, borrar la leyenda "Integra
 
 ## Comentarios
 
-Recuerden que opcionalmente pueden agregar un comentario (ver los lineamientos de entrega). Si es el caso, borren esta línea y dejen su comentario.
+Al ejecutar el cabal test tuvimos algunos errores en las funciones donde regresan listas pero solo es porque salen en distinto orden, basicamente se regresan los conjuntos que deben de ser pero en un orden distinto al esperado en las pruebas.
